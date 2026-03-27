@@ -25,3 +25,12 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-avail
 RUN sed -ri -e 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 WORKDIR /var/www/html
+
+# Copy the application codebase into the image
+COPY . /var/www/html
+
+# Install dependencies using Composer
+RUN composer install --no-dev --optimize-autoloader
+
+# Give Apache permissions to writing to the CI4 writable directory
+RUN chown -R www-data:www-data /var/www/html/writable /var/www/html/public
