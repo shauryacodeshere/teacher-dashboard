@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { GraduationCap, Search, Download, X } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { API_URL } from '../config';
 
 export default function Teachers() {
   const [teachers, setTeachers] = useState([]);
@@ -12,7 +13,7 @@ export default function Teachers() {
   const { token, logout } = useAuth();
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/teachers', {
+    fetch(`${API_URL}/teachers`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(r => {

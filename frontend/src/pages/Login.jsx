@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
+import { API_URL } from '../config';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ export default function Login() {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:8080/api/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Users as UsersIcon, Search, Download, X } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { API_URL } from '../config';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -14,7 +15,7 @@ export default function Users() {
   const { token, logout } = useAuth();
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/users', {
+    fetch(`${API_URL}/users`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(r => {
@@ -52,7 +53,7 @@ export default function Users() {
 
   const handleUpdate = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/api/users/${selectedUser.id}`, {
+      const res = await fetch(`${API_URL}/users/${selectedUser.id}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(editFormData)
@@ -70,7 +71,7 @@ export default function Users() {
   const handleDelete = async () => {
     if (!window.confirm("Permanently delete this user?")) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/users/${selectedUser.id}`, {
+      const res = await fetch(`${API_URL}/users/${selectedUser.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

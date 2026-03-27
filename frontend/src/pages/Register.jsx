@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
+import { API_URL } from '../config';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ export default function Register() {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:8080/api/register', {
+      const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Users, GraduationCap, Activity, TrendingUp } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
+import { API_URL } from '../config';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ users: 0, teachers: 0, lastJoin: 'N/A', active: 0 });
@@ -14,8 +15,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8080/api/users', { headers: { 'Authorization': `Bearer ${token}` } }),
-      fetch('http://localhost:8080/api/teachers', { headers: { 'Authorization': `Bearer ${token}` } })
+      fetch(`${API_URL}/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${API_URL}/teachers`, { headers: { 'Authorization': `Bearer ${token}` } })
     ])
     .then(async ([resUsers, resTeachers]) => {
       if (resUsers.status === 401 || resTeachers.status === 401) { logout(); return; }
