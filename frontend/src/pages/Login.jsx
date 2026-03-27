@@ -36,7 +36,7 @@ export default function Login() {
         login(data.token, data.user);
         navigate('/users');
       } else {
-        const errorMsg = data.error || data.messages?.error || 'Invalid credentials';
+        const errorMsg = data.messages?.error || data.message || (typeof data.error === 'string' ? data.error : 'Invalid credentials');
         toast.error(errorMsg);
         setError(errorMsg);
       }

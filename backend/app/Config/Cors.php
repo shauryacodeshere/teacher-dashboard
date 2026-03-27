@@ -25,7 +25,7 @@ class Cors extends BaseConfig
      *  }
      */
     public array $default = [
-        'allowedOrigins'         => ['http://localhost:5173'],
+        'allowedOrigins'         => ['http://localhost:5173', 'https://teacher-dashboard-1-vv5x.onrender.com'],
         'allowedOriginsPatterns' => [],
         'supportsCredentials'    => true,
         'allowedHeaders'         => ['*'],
