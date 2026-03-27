@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ciproject
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - CI_ENVIRONMENT=development
+      - database.default.hostname=db
+      - database.default.database=ciproject
+      - database.default.username=root
+      - database.default.password=rootpassword
+      - database.default.DBDriver=Postgre
+
+volumes:
+  db_data:
