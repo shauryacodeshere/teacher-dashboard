@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 # Install and configure PHP extensions required by CodeIgniter 4
 RUN docker-php-ext-configure intl \
     && docker-php-ext-install intl \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
+    && docker-php-ext-install pdo pdo_pgsql pgsql mysqli
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
