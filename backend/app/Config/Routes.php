@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('diag', 'Home::diag');
+$routes->get('migrate', 'Home::migrate');
 $routes->options('(:any)', 'Home::index');
 
 $routes->group('api', function($routes) {

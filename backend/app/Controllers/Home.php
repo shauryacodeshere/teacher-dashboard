@@ -9,6 +9,17 @@ class Home extends BaseController
         return view('welcome_message');
     }
 
+    public function migrate()
+    {
+        $migrate = \Config\Services::migrations();
+        try {
+            $migrate->latest();
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Migrations ran successfully!']);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
     public function diag()
     {
         $db = \Config\Database::connect();
@@ -21,11 +32,9 @@ class Home extends BaseController
 
         return $this->response->setJSON([
             'environment' => ENVIRONMENT,
-            'db_driver' => $db->DBDriver,
-            'db_connected' => $connected,
-            'hostname_env' => env('database.default.hostname'),
-            'port_env' => env('database.default.port'),
-            'username_env' => env('database.default.username'),
+            'db_driver'   => $db->DBDriver,
+            'db_connected'=> $connected,
+            'database_url_set' => getenv('DATABASE_URL') ? 'Yes' : 'No',
             'full_db_config' => [
                 'hostname' => $db->hostname,
                 'username' => $db->username,
