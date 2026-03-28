@@ -55,18 +55,28 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Helper: check getenv() (system/Render env vars) first, then CI's env() (from .env file)
-        $get = function(string $key) {
-            $val = getenv($key);
-            return ($val !== false && $val !== '') ? $val : env($key);
-        };
+        // On Render, use DATABASE_URL (standard env var, works on Linux).
+        // Dots in env var names (database.default.hostname) are NOT valid on Linux.
+        $databaseUrl = getenv('DATABASE_URL') ?: env('DATABASE_URL');
 
-        if ($v = $get('database.default.hostname')) $this->default['hostname'] = $v;
-        if ($v = $get('database.default.database')) $this->default['database'] = $v;
-        if ($v = $get('database.default.username')) $this->default['username'] = $v;
-        if ($v = $get('database.default.password')) $this->default['password'] = $v;
-        if ($v = $get('database.default.DBDriver')) $this->default['DBDriver'] = $v;
-        if ($v = $get('database.default.port'))     $this->default['port']     = (int)$v;
+        if ($databaseUrl) {
+            $parsed = parse_url($databaseUrl);
+            $this->default['DBDriver']  = 'Postgre';
+            $this->default['hostname']  = $parsed['host'] ?? 'localhost';
+            $this->default['port']      = $parsed['port'] ?? 5432;
+            $this->default['username']  = $parsed['user'] ?? '';
+            $this->default['password']  = $parsed['pass'] ?? '';
+            $this->default['database']  = ltrim($parsed['path'] ?? '', '/');
+            $this->default['charset']   = 'utf8';
+        } else {
+            // Fallback for local dev: read from .env file
+            if ($v = env('database.default.hostname')) $this->default['hostname'] = $v;
+            if ($v = env('database.default.database')) $this->default['database'] = $v;
+            if ($v = env('database.default.username')) $this->default['username'] = $v;
+            if ($v = env('database.default.password')) $this->default['password'] = $v;
+            if ($v = env('database.default.DBDriver')) $this->default['DBDriver'] = $v;
+            if ($v = env('database.default.port'))     $this->default['port']     = (int)$v;
+        }
 
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
