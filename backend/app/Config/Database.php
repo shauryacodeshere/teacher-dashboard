@@ -55,13 +55,18 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Load from environment variables if present
-        if ($hostname = env('database.default.hostname')) $this->default['hostname'] = $hostname;
-        if ($database = env('database.default.database')) $this->default['database'] = $database;
-        if ($username = env('database.default.username')) $this->default['username'] = $username;
-        if ($password = env('database.default.password')) $this->default['password'] = $password;
-        if ($dbdriver = env('database.default.DBDriver')) $this->default['DBDriver'] = $dbdriver;
-        if ($port     = env('database.default.port'))     $this->default['port']     = $port;
+        // Helper: check getenv() (system/Render env vars) first, then CI's env() (from .env file)
+        $get = function(string $key) {
+            $val = getenv($key);
+            return ($val !== false && $val !== '') ? $val : env($key);
+        };
+
+        if ($v = $get('database.default.hostname')) $this->default['hostname'] = $v;
+        if ($v = $get('database.default.database')) $this->default['database'] = $v;
+        if ($v = $get('database.default.username')) $this->default['username'] = $v;
+        if ($v = $get('database.default.password')) $this->default['password'] = $v;
+        if ($v = $get('database.default.DBDriver')) $this->default['DBDriver'] = $v;
+        if ($v = $get('database.default.port'))     $this->default['port']     = (int)$v;
 
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
