@@ -51,6 +51,23 @@ class Database extends Config
         ],
     ];
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Load from environment variables if present
+        if ($hostname = env('database.default.hostname')) $this->default['hostname'] = $hostname;
+        if ($database = env('database.default.database')) $this->default['database'] = $database;
+        if ($username = env('database.default.username')) $this->default['username'] = $username;
+        if ($password = env('database.default.password')) $this->default['password'] = $password;
+        if ($dbdriver = env('database.default.DBDriver')) $this->default['DBDriver'] = $dbdriver;
+        if ($port     = env('database.default.port'))     $this->default['port']     = $port;
+
+        if (ENVIRONMENT === 'testing') {
+            $this->defaultGroup = 'tests';
+        }
+    }
+
     //    /**
     //     * Sample database connection for SQLite3.
     //     *
@@ -190,15 +207,4 @@ class Database extends Config
         ],
     ];
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        // Ensure that we always set the database group to 'tests' if
-        // we are currently running an automated test suite, so that
-        // we don't overwrite live data on accident.
-        if (ENVIRONMENT === 'testing') {
-            $this->defaultGroup = 'tests';
-        }
-    }
 }
